@@ -1,9 +1,9 @@
 import ReviewList from "./ReviewList";
-import mockItems from '../mock.json';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getReviews } from "../api";
 
 function App(){
-    const [items, setItems] = useState(mockItems);
+    const [items, setItems] = useState([]);
     // 정렬기준에 대한 state
     const [order, setOrder] = useState('createdAt');
     // 정렬기준을 통해 아이템 정렬
@@ -17,6 +17,16 @@ function App(){
         const nextItems = items.filter((item) => item.id !== id);
         setItems(nextItems);
     }
+
+    const handleLoad = async () => {
+        const {reviews} = await getReviews();
+        setItems(reviews);
+    }
+    // 컴포넌트가 '처음' 렌더링될때 수행되는 함수 = useEffect
+    useEffect(() => {
+        handleLoad();
+    }, []);
+
     return(
         <div>
             <div>
